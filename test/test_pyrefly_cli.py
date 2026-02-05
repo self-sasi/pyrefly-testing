@@ -6,16 +6,16 @@ import unittest
 
 parent_directory = Path(__file__).resolve().parent.parent
 
-first_path = parent_directory / "src/first.py"
-second_path = parent_directory / "src/second.py"
-third_path = parent_directory / "src/third.py"
+first_path = parent_directory / "src/issue_unused_ignores/first.py"
+second_path = parent_directory / "src/issue_unused_ignores/second.py"
+third_path = parent_directory / "src/issue_unused_ignores/third.py"
 
 def run_pyrefly_check():
-    cmd = ["pyrefly", "check", "--remove-unused-ignores", "src/first.py", "src/second.py", "src/third.py"]
+    cmd = ["pyrefly", "check", "--remove-unused-ignores", "src/issue_unused_ignores/first.py", "src/issue_unused_ignores/second.py", "src/issue_unused_ignores/third.py"]
     subprocess.run(cmd, cwd=parent_directory)
 
 def cleanup():
-    cmd = ["git", "reset", "--hard", "HEAD", "--", "src/first.py", "src/second.py", "src/third.py"]
+    cmd = ["git", "reset", "--hard", "HEAD", "--", "src/issue_unused_ignores/first.py", "src/issue_unused_ignores/second.py", "src/issue_unused_ignores/third.py"]
     subprocess.run(cmd, cwd=parent_directory)
 
 class TestPyreFlyCLI(unittest.TestCase):
@@ -38,7 +38,7 @@ class TestPyreFlyCLI(unittest.TestCase):
         post_second_time_stamp = os.path.getmtime(second_path)
         post_third_time_stamp = os.path.getmtime(third_path)
         
-        # src/first.py and src/second.py should go unmodified after running cmd
+        # src/issue_unused_ignores/first.py and src/issue_unused_ignores/second.py should go unmodified after running cmd
         self.assertEqual(
             initial_first_time_stamp, post_first_time_stamp, 
             "first.py was modified when it should not have been."
@@ -47,7 +47,7 @@ class TestPyreFlyCLI(unittest.TestCase):
             initial_second_time_stamp, post_second_time_stamp,
             "second.py was modified when it should not have been."
         )
-        # src/third.py should be modified after running cmd as it has an unused ignore
+        # src/issue_unused_ignores/third.py should be modified after running cmd as it has an unused ignore
         self.assertNotEqual(
             initial_third_time_stamp, post_third_time_stamp,
             "third.py was unmodified, when it should have been modifed."
